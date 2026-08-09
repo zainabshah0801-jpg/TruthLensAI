@@ -1,0 +1,556 @@
+/* =========================================
+   TRUTHLENS AI — CINEMATIC SPLASH SCREEN
+   ========================================= */
+
+.splash-screen {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 99999;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #101a3b 0%,
+      #070b19 45%,
+      #03050c 100%
+    );
+
+  animation: splashAppear 0.8s ease both;
+}
+
+
+/* =========================================
+   GRID
+   ========================================= */
+
+.splash-grid {
+  position: absolute;
+
+  inset: -50%;
+
+  opacity: 0.13;
+
+  background-image:
+    linear-gradient(
+      rgba(110,130,255,0.25) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(110,130,255,0.25) 1px,
+      transparent 1px
+    );
+
+  background-size: 55px 55px;
+
+  transform:
+    perspective(500px)
+    rotateX(60deg);
+
+  animation: gridMove 8s linear infinite;
+}
+
+
+/* =========================================
+   GLOW
+   ========================================= */
+
+.splash-glow {
+  position: absolute;
+
+  width: 450px;
+  height: 450px;
+
+  border-radius: 50%;
+
+  filter: blur(100px);
+
+  opacity: 0.12;
+
+  pointer-events: none;
+}
+
+.splash-glow-one {
+  background: #5068ff;
+
+  animation: glowFloat 5s ease-in-out infinite;
+}
+
+.splash-glow-two {
+  background: #00d9ff;
+
+  transform: translate(180px, -120px);
+
+  opacity: 0.08;
+
+  animation: glowFloatTwo 6s ease-in-out infinite;
+}
+
+
+/* =========================================
+   CONTENT
+   ========================================= */
+
+.splash-content {
+  position: relative;
+
+  z-index: 2;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   LOGO
+   ========================================= */
+
+.splash-logo {
+  position: relative;
+
+  width: 130px;
+  height: 130px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  animation:
+    logoEnter 1.2s
+    cubic-bezier(0.16, 1, 0.3, 1)
+    both;
+}
+
+.logo-core {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      #b5f6ff,
+      #637aff 55%,
+      #384bd0
+    );
+
+  color: white;
+
+  font-size: 1.7rem;
+
+  box-shadow:
+    0 0 30px rgba(90,150,255,0.7),
+    0 0 80px rgba(80,110,255,0.3);
+
+  animation: corePulse 2s ease-in-out infinite;
+}
+
+.logo-ring {
+  position: absolute;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(110,150,255,0.5);
+}
+
+.ring-one {
+  width: 85px;
+  height: 85px;
+
+  border-style: dashed;
+
+  animation: ringSpin 5s linear infinite;
+}
+
+.ring-two {
+  width: 120px;
+  height: 120px;
+
+  opacity: 0.35;
+
+  animation: ringSpinReverse 8s linear infinite;
+}
+
+
+/* =========================================
+   BRAND
+   ========================================= */
+
+.splash-brand {
+  margin-top: 25px;
+
+  animation:
+    brandEnter 1s
+    0.35s
+    cubic-bezier(0.16, 1, 0.3, 1)
+    both;
+}
+
+.splash-mini {
+  color: #6f80c9;
+
+  font-size: 0.52rem;
+
+  font-weight: 900;
+
+  letter-spacing: 3px;
+}
+
+.splash-brand h1 {
+  margin-top: 10px;
+
+  color: #edf2ff;
+
+  font-size: clamp(3rem, 9vw, 6rem);
+
+  font-weight: 900;
+
+  letter-spacing: -5px;
+
+  line-height: 0.95;
+
+  text-shadow:
+    0 0 30px rgba(100,130,255,0.2);
+}
+
+.splash-brand h1 span {
+  background:
+    linear-gradient(
+      100deg,
+      #7588ff,
+      #69e7ff
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+}
+
+.splash-brand h1 small {
+  margin-left: 8px;
+
+  color: #6cddff;
+
+  font-size: 0.35em;
+
+  letter-spacing: 2px;
+
+  vertical-align: top;
+}
+
+.splash-brand p {
+  margin-top: 15px;
+
+  color: #68748d;
+
+  font-size: 0.8rem;
+
+  letter-spacing: 3px;
+}
+
+
+/* =========================================
+   LOADER
+   ========================================= */
+
+.splash-loader {
+  width: min(380px, 70vw);
+
+  margin-top: 45px;
+
+  animation:
+    loaderEnter 0.8s
+    0.7s
+    ease both;
+}
+
+.loader-track {
+  width: 100%;
+  height: 3px;
+
+  overflow: hidden;
+
+  border-radius: 10px;
+
+  background: rgba(255,255,255,0.07);
+}
+
+.loader-progress {
+  width: 0%;
+  height: 100%;
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #536cff,
+      #62e5ff
+    );
+
+  box-shadow:
+    0 0 15px rgba(90,200,255,0.8);
+
+  animation:
+    loadingProgress 2.3s
+    cubic-bezier(0.65, 0, 0.35, 1)
+    forwards;
+}
+
+.loader-text {
+  display: flex;
+
+  justify-content: space-between;
+
+  margin-top: 10px;
+
+  color: #4e5b76;
+
+  font-size: 0.48rem;
+
+  font-weight: 900;
+
+  letter-spacing: 1.5px;
+}
+
+
+/* =========================================
+   FOOTER
+   ========================================= */
+
+.splash-footer {
+  position: absolute;
+
+  bottom: 25px;
+
+  left: 0;
+  right: 0;
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  padding: 0 20px;
+
+  color: #3e4960;
+
+  font-size: 0.45rem;
+
+  font-weight: 900;
+
+  letter-spacing: 1.2px;
+
+  text-align: center;
+
+  animation:
+    brandEnter 1s
+    1s
+    ease both;
+}
+
+
+/* =========================================
+   EXIT
+   ========================================= */
+
+.splash-exit {
+  animation:
+    splashExit 0.7s
+    cubic-bezier(0.76, 0, 0.24, 1)
+    forwards;
+}
+
+
+/* =========================================
+   ANIMATIONS
+   ========================================= */
+
+@keyframes splashAppear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes logoEnter {
+  from {
+    opacity: 0;
+
+    transform:
+      scale(0.2)
+      rotate(-25deg);
+
+    filter: blur(15px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      scale(1)
+      rotate(0);
+
+    filter: blur(0);
+  }
+}
+
+@keyframes brandEnter {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(20px);
+
+    filter: blur(8px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+
+    filter: blur(0);
+  }
+}
+
+@keyframes corePulse {
+  0%, 100% {
+    transform: scale(0.95);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes ringSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ringSpinReverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes loadingProgress {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes splashExit {
+  from {
+    opacity: 1;
+
+    transform: scale(1);
+
+    filter: blur(0);
+  }
+
+  to {
+    opacity: 0;
+
+    transform: scale(1.08);
+
+    filter: blur(10px);
+
+    visibility: hidden;
+  }
+}
+
+@keyframes gridMove {
+  from {
+    transform:
+      perspective(500px)
+      rotateX(60deg)
+      translateY(0);
+  }
+
+  to {
+    transform:
+      perspective(500px)
+      rotateX(60deg)
+      translateY(55px);
+  }
+}
+
+@keyframes glowFloat {
+  0%, 100% {
+    transform: translate(-50px, 0);
+  }
+
+  50% {
+    transform: translate(50px, -30px);
+  }
+}
+
+@keyframes glowFloatTwo {
+  0%, 100% {
+    transform: translate(180px, -120px);
+  }
+
+  50% {
+    transform: translate(80px, 20px);
+  }
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+  .splash-brand h1 {
+    letter-spacing: -3px;
+  }
+
+  .splash-brand p {
+    font-size: 0.65rem;
+
+    letter-spacing: 2px;
+  }
+
+  .splash-footer {
+    flex-direction: column;
+
+    gap: 5px;
+
+    line-height: 1.5;
+  }
+}
