@@ -3,7 +3,8 @@ import "./ResultCard.css";
 function ResultCard({ result }) {
   const score = Number(result?.score || 0);
 
-  const isGenuine = result?.label === "Likely Genuine";
+  const isGenuine =
+    result?.label === "Likely Genuine";
 
   const getScoreMessage = () => {
     if (score >= 80) return "High model confidence";
@@ -29,6 +30,7 @@ function ResultCard({ result }) {
     <div className="result-card">
 
       {/* HEADER */}
+
       <div className="result-card-header">
 
         <div className="result-title">
@@ -51,13 +53,14 @@ function ResultCard({ result }) {
 
         <div className="result-status">
           <span></span>
-          COMPLETE
+          {result?.analysis_status || "COMPLETE"}
         </div>
 
       </div>
 
 
       {/* MAIN PREDICTION */}
+
       <div
         className={`prediction-section ${
           isGenuine ? "genuine" : "fake"
@@ -99,6 +102,7 @@ function ResultCard({ result }) {
 
 
       {/* CONFIDENCE */}
+
       <div className="confidence-section">
 
         <div className="confidence-header">
@@ -153,6 +157,7 @@ function ResultCard({ result }) {
 
 
       {/* AI ANALYSIS BREAKDOWN */}
+
       <div className="analysis-breakdown">
 
         <div className="breakdown-header">
@@ -177,9 +182,10 @@ function ResultCard({ result }) {
 
 
         {/* SIGNAL 1 */}
+
         <div className="analysis-signal">
 
-          <div className="signal-icon genuine-icon">
+          <div className="signal-icon">
             ◉
           </div>
 
@@ -187,27 +193,15 @@ function ResultCard({ result }) {
 
             <div className="signal-top">
 
-              <div className="signal-name">
-                <strong>
-                  Classification Signal
-                </strong>
+              <strong>
+                Classification Signal
+              </strong>
 
-                <small>
-                  AI classification result
-                </small>
-              </div>
-
-              <div
-                className={`signal-result ${
-                  isGenuine ? "signal-genuine" : "signal-risk"
-                }`}
-              >
-                <span className="signal-dot"></span>
-
+              <span>
                 {isGenuine
                   ? "GENUINE PATTERN"
                   : "RISK SIGNAL"}
-              </div>
+              </span>
 
             </div>
 
@@ -221,9 +215,10 @@ function ResultCard({ result }) {
 
 
         {/* SIGNAL 2 */}
+
         <div className="analysis-signal">
 
-          <div className="signal-icon confidence-icon">
+          <div className="signal-icon">
             ◇
           </div>
 
@@ -231,30 +226,20 @@ function ResultCard({ result }) {
 
             <div className="signal-top">
 
-              <div className="signal-name">
-                <strong>
-                  Model Confidence
-                </strong>
+              <strong>
+                Model Confidence
+              </strong>
 
-                <small>
-                  Prediction reliability
-                </small>
-              </div>
-
-              <div className="signal-result signal-confidence">
-                <span className="signal-dot"></span>
-
-                {getReliabilityLevel()}
-              </div>
+              <span>
+                {result?.confidence_level ||
+                  getReliabilityLevel()}
+              </span>
 
             </div>
 
             <p>
-              The model assigned a confidence score of{" "}
-              <strong className="inline-score">
-                {score.toFixed(1)}%
-              </strong>{" "}
-              to its prediction.
+              The model assigned a confidence score
+              of {score.toFixed(1)}% to its prediction.
             </p>
 
           </div>
@@ -263,9 +248,10 @@ function ResultCard({ result }) {
 
 
         {/* SIGNAL 3 */}
+
         <div className="analysis-signal">
 
-          <div className="signal-icon processing-icon">
+          <div className="signal-icon">
             ⚡
           </div>
 
@@ -273,20 +259,13 @@ function ResultCard({ result }) {
 
             <div className="signal-top">
 
-              <div className="signal-name">
-                <strong>
-                  AI Processing
-                </strong>
+              <strong>
+                AI Processing
+              </strong>
 
-                <small>
-                  Analysis engine status
-                </small>
-              </div>
-
-              <div className="signal-result signal-complete">
-                <span className="signal-dot"></span>
-                COMPLETE
-              </div>
+              <span>
+                {result?.analysis_status || "COMPLETE"}
+              </span>
 
             </div>
 
@@ -304,6 +283,7 @@ function ResultCard({ result }) {
 
 
       {/* RESULT DETAILS */}
+
       <div className="result-details">
 
         <div className="detail-box">
@@ -357,11 +337,11 @@ function ResultCard({ result }) {
           <div>
 
             <small>
-              ENGINE
+              ENGINE STATUS
             </small>
 
             <strong>
-              AI ACTIVE
+              {result?.analysis_status || "AI ACTIVE"}
             </strong>
 
           </div>
@@ -372,6 +352,7 @@ function ResultCard({ result }) {
 
 
       {/* SYSTEM MESSAGE */}
+
       {result?.message && (
         <div className="result-message">
 
@@ -394,6 +375,7 @@ function ResultCard({ result }) {
 
 
       {/* MODEL OUTPUT */}
+
       {result?.model_label && (
         <div className="model-information">
 
@@ -410,6 +392,7 @@ function ResultCard({ result }) {
 
 
       {/* INTERPRETATION */}
+
       <div className="interpretation-box">
 
         <div className="interpretation-icon">
@@ -436,6 +419,7 @@ function ResultCard({ result }) {
 
 
       {/* DISCLAIMER */}
+
       <div className="result-disclaimer">
 
         <span>
