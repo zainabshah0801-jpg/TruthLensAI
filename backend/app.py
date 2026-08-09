@@ -1,65 +1,50 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+
 from model import predict_news
+from source_verifier import verify_source
+
 
 app = Flask(__name__)
+
 CORS(app)
 
 
-# Health check
-@app.route("/", methods=["GET"])
-def home():
-    return jsonify({
-        "status": "online",
-        "service": "TruthLens AI",
-        "message": "TruthLens AI backend is running."
-    })
+# ==========================================
+# EXISTING AI PREDICTION
+# ==========================================
 
-
-# News prediction
 @app.route("/predict", methods=["POST"])
 def predict():
 
-    try:
-        # Check whether JSON data was received
-        data = request.get_json(silent=True)
+    data = request.get_json()
 
-        if not data:
-            return jsonify({
-                "success": False,
-                "error": "No JSON data received."
-            }), 400
+    text = data.get("text", "")
 
-        # Get text from request
-        text = data.get("text", "")
+    result = predict_news(text)
 
-        # Validate text
-        if not isinstance(text, str) or not text.strip():
-            return jsonify({
-                "success": False,
-                "error": "Please enter some news text."
-            }), 400
+    return jsonify(result)
 
-        # Prevent excessively large requests
-        text = text.strip()[:2000]
 
-        # Run AI prediction
-        result = predict_news(text)
+# ==========================================
+# SOURCE VERIFICATION
+# ==========================================
 
-        # Add API success indicator
-        result["success"] = True
+@app.route("/verify-source", methods=["POST"])
+def verify_source_route():
 
-        return jsonify(result), 200
+    data = request.get_json()
 
-    except Exception as error:
+    url = data.get("url", "")
 
-        print("Prediction error:", error)
+    result = verify_source(url)
 
-        return jsonify({
-            "success": False,
-            "error": "Unable to analyze the text at the moment."
-        }), 500
+    return jsonify(result)
 
+
+# ==========================================
+# START SERVER
+# ==========================================
 
 if __name__ == "__main__":
     app.run(debug=True)
