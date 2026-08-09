@@ -3,26 +3,32 @@ import "./ResultCard.css";
 function ResultCard({ result }) {
   const score = Number(result?.score || 0);
 
-  const isGenuine =
-    result?.label === "Likely Genuine";
+  const isGenuine = result?.label === "Likely Genuine";
 
   const getScoreMessage = () => {
-    if (score >= 80) {
-      return "High model confidence";
-    }
-
-    if (score >= 60) {
-      return "Moderate model confidence";
-    }
-
+    if (score >= 80) return "High model confidence";
+    if (score >= 60) return "Moderate model confidence";
     return "Low model confidence";
+  };
+
+  const getReliabilityLevel = () => {
+    if (score >= 80) return "HIGH";
+    if (score >= 60) return "MODERATE";
+    return "LOW";
+  };
+
+  const getSignalMessage = () => {
+    if (isGenuine) {
+      return "The model detected patterns more consistent with genuine information.";
+    }
+
+    return "The model detected patterns that may be associated with unreliable information.";
   };
 
   return (
     <div className="result-card">
 
       {/* HEADER */}
-
       <div className="result-card-header">
 
         <div className="result-title">
@@ -51,8 +57,7 @@ function ResultCard({ result }) {
       </div>
 
 
-      {/* MAIN RESULT */}
-
+      {/* MAIN PREDICTION */}
       <div
         className={`prediction-section ${
           isGenuine ? "genuine" : "fake"
@@ -84,8 +89,8 @@ function ResultCard({ result }) {
 
           <p>
             {isGenuine
-              ? "The AI model found patterns that are more consistent with genuine news."
-              : "The AI model found patterns that may be associated with unreliable or misleading content."}
+              ? "The AI model found patterns that are more consistent with genuine information."
+              : "The AI model found patterns that may be associated with unreliable or misleading information."}
           </p>
 
         </div>
@@ -94,12 +99,12 @@ function ResultCard({ result }) {
 
 
       {/* CONFIDENCE */}
-
       <div className="confidence-section">
 
         <div className="confidence-header">
 
           <div>
+
             <span>
               MODEL CONFIDENCE
             </span>
@@ -107,6 +112,7 @@ function ResultCard({ result }) {
             <strong>
               {getScoreMessage()}
             </strong>
+
           </div>
 
           <div className="confidence-number">
@@ -146,8 +152,158 @@ function ResultCard({ result }) {
       </div>
 
 
-      {/* ANALYSIS DETAILS */}
+      {/* AI ANALYSIS BREAKDOWN */}
+      <div className="analysis-breakdown">
 
+        <div className="breakdown-header">
+
+          <div>
+
+            <span className="breakdown-label">
+              AI ANALYSIS
+            </span>
+
+            <h3>
+              What did TruthLens find?
+            </h3>
+
+          </div>
+
+          <div className="breakdown-badge">
+            AI ENGINE
+          </div>
+
+        </div>
+
+
+        {/* SIGNAL 1 */}
+        <div className="analysis-signal">
+
+          <div className="signal-icon genuine-icon">
+            ◉
+          </div>
+
+          <div className="signal-content">
+
+            <div className="signal-top">
+
+              <div className="signal-name">
+                <strong>
+                  Classification Signal
+                </strong>
+
+                <small>
+                  AI classification result
+                </small>
+              </div>
+
+              <div
+                className={`signal-result ${
+                  isGenuine ? "signal-genuine" : "signal-risk"
+                }`}
+              >
+                <span className="signal-dot"></span>
+
+                {isGenuine
+                  ? "GENUINE PATTERN"
+                  : "RISK SIGNAL"}
+              </div>
+
+            </div>
+
+            <p>
+              {getSignalMessage()}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        {/* SIGNAL 2 */}
+        <div className="analysis-signal">
+
+          <div className="signal-icon confidence-icon">
+            ◇
+          </div>
+
+          <div className="signal-content">
+
+            <div className="signal-top">
+
+              <div className="signal-name">
+                <strong>
+                  Model Confidence
+                </strong>
+
+                <small>
+                  Prediction reliability
+                </small>
+              </div>
+
+              <div className="signal-result signal-confidence">
+                <span className="signal-dot"></span>
+
+                {getReliabilityLevel()}
+              </div>
+
+            </div>
+
+            <p>
+              The model assigned a confidence score of{" "}
+              <strong className="inline-score">
+                {score.toFixed(1)}%
+              </strong>{" "}
+              to its prediction.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        {/* SIGNAL 3 */}
+        <div className="analysis-signal">
+
+          <div className="signal-icon processing-icon">
+            ⚡
+          </div>
+
+          <div className="signal-content">
+
+            <div className="signal-top">
+
+              <div className="signal-name">
+                <strong>
+                  AI Processing
+                </strong>
+
+                <small>
+                  Analysis engine status
+                </small>
+              </div>
+
+              <div className="signal-result signal-complete">
+                <span className="signal-dot"></span>
+                COMPLETE
+              </div>
+
+            </div>
+
+            <p>
+              The submitted content was processed
+              through the TruthLens AI classification
+              engine.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      {/* RESULT DETAILS */}
       <div className="result-details">
 
         <div className="detail-box">
@@ -157,6 +313,7 @@ function ResultCard({ result }) {
           </span>
 
           <div>
+
             <small>
               CLASSIFICATION
             </small>
@@ -164,6 +321,7 @@ function ResultCard({ result }) {
             <strong>
               {result?.label || "Unknown"}
             </strong>
+
           </div>
 
         </div>
@@ -176,6 +334,7 @@ function ResultCard({ result }) {
           </span>
 
           <div>
+
             <small>
               CONFIDENCE
             </small>
@@ -183,6 +342,7 @@ function ResultCard({ result }) {
             <strong>
               {score.toFixed(1)}%
             </strong>
+
           </div>
 
         </div>
@@ -195,6 +355,7 @@ function ResultCard({ result }) {
           </span>
 
           <div>
+
             <small>
               ENGINE
             </small>
@@ -202,6 +363,7 @@ function ResultCard({ result }) {
             <strong>
               AI ACTIVE
             </strong>
+
           </div>
 
         </div>
@@ -209,8 +371,7 @@ function ResultCard({ result }) {
       </div>
 
 
-      {/* MESSAGE */}
-
+      {/* SYSTEM MESSAGE */}
       {result?.message && (
         <div className="result-message">
 
@@ -232,8 +393,7 @@ function ResultCard({ result }) {
       )}
 
 
-      {/* MODEL INFORMATION */}
-
+      {/* MODEL OUTPUT */}
       {result?.model_label && (
         <div className="model-information">
 
@@ -249,8 +409,7 @@ function ResultCard({ result }) {
       )}
 
 
-      {/* HOW TO INTERPRET */}
-
+      {/* INTERPRETATION */}
       <div className="interpretation-box">
 
         <div className="interpretation-icon">
@@ -277,10 +436,11 @@ function ResultCard({ result }) {
 
 
       {/* DISCLAIMER */}
-
       <div className="result-disclaimer">
 
-        <span>ⓘ</span>
+        <span>
+          ⓘ
+        </span>
 
         <p>
           TruthLens AI provides an AI-assisted
