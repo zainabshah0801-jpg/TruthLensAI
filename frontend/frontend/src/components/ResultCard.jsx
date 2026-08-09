@@ -1,3 +1,5 @@
+import "./ResultCard.css";
+
 function ResultCard({ result }) {
   const score = Number(result?.score || 0);
 
@@ -77,13 +79,13 @@ function ResultCard({ result }) {
           </span>
 
           <h3>
-            {result.label || "Unknown"}
+            {result?.label || "Unknown"}
           </h3>
 
           <p>
             {isGenuine
-              ? "The model classified this content as likely genuine."
-              : "The model identified signals associated with potentially unreliable content."}
+              ? "The AI model found patterns that are more consistent with genuine news."
+              : "The AI model found patterns that may be associated with unreliable or misleading content."}
           </p>
 
         </div>
@@ -160,7 +162,7 @@ function ResultCard({ result }) {
             </small>
 
             <strong>
-              {result.label || "Unknown"}
+              {result?.label || "Unknown"}
             </strong>
           </div>
 
@@ -209,12 +211,13 @@ function ResultCard({ result }) {
 
       {/* MESSAGE */}
 
-      {result.message && (
+      {result?.message && (
         <div className="result-message">
 
           <span>✦</span>
 
           <div>
+
             <small>
               SYSTEM MESSAGE
             </small>
@@ -222,15 +225,16 @@ function ResultCard({ result }) {
             <p>
               {result.message}
             </p>
+
           </div>
 
         </div>
       )}
 
 
-      {/* MODEL LABEL */}
+      {/* MODEL INFORMATION */}
 
-      {result.model_label && (
+      {result?.model_label && (
         <div className="model-information">
 
           <span>
@@ -245,16 +249,47 @@ function ResultCard({ result }) {
       )}
 
 
+      {/* HOW TO INTERPRET */}
+
+      <div className="interpretation-box">
+
+        <div className="interpretation-icon">
+          ⓘ
+        </div>
+
+        <div>
+
+          <span>
+            HOW TO INTERPRET THIS RESULT
+          </span>
+
+          <p>
+            A higher confidence score means the AI
+            model is more confident in its
+            classification. It does not mean that
+            the percentage represents the probability
+            that the news is factually true.
+          </p>
+
+        </div>
+
+      </div>
+
+
       {/* DISCLAIMER */}
 
       <div className="result-disclaimer">
+
         <span>ⓘ</span>
 
         <p>
-          This result represents an AI model's
-          classification confidence. It should not be
-          treated as definitive proof that information
-          is true or false.
+          TruthLens AI provides an AI-assisted
+          prediction, not a definitive fact-check.
+          The confidence score represents the
+          model's confidence in its classification
+          and does not guarantee that the information
+          is true or false. Always verify important
+          information using reliable sources.
         </p>
 
       </div>

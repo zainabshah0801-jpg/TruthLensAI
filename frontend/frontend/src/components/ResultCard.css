@@ -1,21 +1,21 @@
 /* =========================================
    TRUTHLENS AI — RESULT CARD
-   ========================================= */
+========================================= */
 
 .result-card {
   position: relative;
 
   padding: 30px;
 
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
   border-radius: 20px;
 
   background:
     linear-gradient(
       145deg,
-      rgba(255,255,255,0.055),
-      rgba(255,255,255,0.015)
+      rgba(255, 255, 255, 0.055),
+      rgba(255, 255, 255, 0.015)
     );
 
   overflow: hidden;
@@ -26,7 +26,7 @@
 
 /* =========================================
    HEADER
-   ========================================= */
+========================================= */
 
 .result-card-header {
   display: flex;
@@ -37,7 +37,7 @@
 
   padding-bottom: 22px;
 
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .result-title {
@@ -61,14 +61,14 @@
 
   color: #70e3c2;
 
-  background: rgba(70,220,180,0.08);
+  background: rgba(70, 220, 180, 0.08);
 
-  border: 1px solid rgba(70,220,180,0.18);
+  border: 1px solid rgba(70, 220, 180, 0.18);
 
   font-size: 1.1rem;
 
   box-shadow:
-    0 0 25px rgba(70,220,180,0.08);
+    0 0 25px rgba(70, 220, 180, 0.08);
 }
 
 .result-label {
@@ -123,7 +123,7 @@
 
 /* =========================================
    PREDICTION
-   ========================================= */
+========================================= */
 
 .prediction-section {
   display: flex;
@@ -138,18 +138,18 @@
 
   border-radius: 16px;
 
-  border: 1px solid rgba(100,125,255,0.12);
+  border: 1px solid rgba(100, 125, 255, 0.12);
 
   background:
-    rgba(60,80,180,0.035);
+    rgba(60, 80, 180, 0.035);
 }
 
 .prediction-section.genuine {
-  border-color: rgba(70,220,180,0.12);
+  border-color: rgba(70, 220, 180, 0.12);
 }
 
 .prediction-section.fake {
-  border-color: rgba(255,180,90,0.12);
+  border-color: rgba(255, 180, 90, 0.12);
 }
 
 .prediction-orb {
@@ -189,7 +189,7 @@
   font-size: 1.5rem;
 
   box-shadow:
-    0 0 30px rgba(85,140,255,0.55);
+    0 0 30px rgba(85, 140, 255, 0.55);
 
   animation: predictionPulse 2.5s infinite;
 }
@@ -203,7 +203,7 @@
     );
 
   box-shadow:
-    0 0 30px rgba(255,120,100,0.35);
+    0 0 30px rgba(255, 120, 100, 0.35);
 }
 
 .prediction-ring {
@@ -211,7 +211,7 @@
 
   border-radius: 50%;
 
-  border: 1px solid rgba(105,130,255,0.35);
+  border: 1px solid rgba(105, 130, 255, 0.35);
 }
 
 .ring-a {
@@ -271,18 +271,18 @@
 
 /* =========================================
    CONFIDENCE
-   ========================================= */
+========================================= */
 
 .confidence-section {
   margin-top: 25px;
 
   padding: 22px;
 
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 
   border-radius: 15px;
 
-  background: rgba(255,255,255,0.015);
+  background: rgba(255, 255, 255, 0.015);
 }
 
 .confidence-header {
@@ -323,7 +323,7 @@
   font-weight: 900;
 
   text-shadow:
-    0 0 20px rgba(100,125,255,0.25);
+    0 0 20px rgba(100, 125, 255, 0.25);
 }
 
 .confidence-track {
@@ -335,7 +335,7 @@
 
   border-radius: 20px;
 
-  background: rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.06);
 
   overflow: visible;
 }
@@ -353,7 +353,7 @@
     );
 
   box-shadow:
-    0 0 15px rgba(90,190,255,0.35);
+    0 0 15px rgba(90, 190, 255, 0.35);
 
   transition: width 1.2s ease;
 
@@ -377,7 +377,7 @@
   border: 3px solid #687dff;
 
   box-shadow:
-    0 0 12px rgba(100,140,255,0.8);
+    0 0 12px rgba(100, 140, 255, 0.8);
 
   transition: left 1.2s ease;
 }
@@ -397,7 +397,7 @@
 
 /* =========================================
    DETAILS
-   ========================================= */
+========================================= */
 
 .result-details {
   display: grid;
@@ -419,11 +419,11 @@
 
   padding: 15px;
 
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 
   border-radius: 12px;
 
-  background: rgba(255,255,255,0.018);
+  background: rgba(255, 255, 255, 0.018);
 }
 
 .detail-icon {
@@ -457,7 +457,7 @@
 
 /* =========================================
    MESSAGE
-   ========================================= */
+========================================= */
 
 .result-message {
   display: flex;
@@ -470,7 +470,7 @@
 
   border-left: 2px solid #687cff;
 
-  background: rgba(100,120,255,0.035);
+  background: rgba(100, 120, 255, 0.035);
 
   border-radius: 0 10px 10px 0;
 }
@@ -500,7 +500,7 @@
 
 /* =========================================
    MODEL INFORMATION
-   ========================================= */
+========================================= */
 
 .model-information {
   display: flex;
@@ -515,7 +515,7 @@
 
   border-radius: 9px;
 
-  background: rgba(255,255,255,0.018);
+  background: rgba(255, 255, 255, 0.018);
 }
 
 .model-information span {
@@ -536,8 +536,95 @@
 
 
 /* =========================================
+   HOW TO INTERPRET
+========================================= */
+
+.interpretation-box {
+  display: flex;
+
+  gap: 12px;
+
+  margin-top: 18px;
+
+  padding: 16px;
+
+  border: 1px solid rgba(110, 130, 255, 0.12);
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(90, 110, 255, 0.045),
+      rgba(255, 255, 255, 0.012)
+    );
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease;
+}
+
+.interpretation-box:hover {
+  transform: translateY(-2px);
+
+  border-color:
+    rgba(110, 130, 255, 0.25);
+
+  background:
+    rgba(100, 120, 255, 0.055);
+}
+
+.interpretation-icon {
+  flex-shrink: 0;
+
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+
+  color: #8493ff;
+
+  background:
+    rgba(100, 120, 255, 0.08);
+
+  border:
+    1px solid rgba(100, 120, 255, 0.15);
+
+  font-size: 0.8rem;
+}
+
+.interpretation-box span {
+  display: block;
+
+  color: #64719a;
+
+  font-size: 0.5rem;
+
+  font-weight: 900;
+
+  letter-spacing: 1.4px;
+}
+
+.interpretation-box p {
+  margin-top: 6px;
+
+  color: #778299;
+
+  font-size: 0.62rem;
+
+  line-height: 1.65;
+}
+
+
+/* =========================================
    DISCLAIMER
-   ========================================= */
+========================================= */
 
 .result-disclaimer {
   display: flex;
@@ -548,7 +635,7 @@
 
   padding-top: 16px;
 
-  border-top: 1px solid rgba(255,255,255,0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 
   color: #4d5970;
 }
@@ -568,9 +655,10 @@
 
 /* =========================================
    ANIMATIONS
-   ========================================= */
+========================================= */
 
 @keyframes resultCardEnter {
+
   from {
     opacity: 0;
 
@@ -586,50 +674,63 @@
       translateY(0)
       scale(1);
   }
+
 }
 
 @keyframes statusBlink {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.4;
   }
 
   50% {
     opacity: 1;
   }
+
 }
 
 @keyframes predictionPulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(0.95);
   }
 
   50% {
     transform: scale(1.08);
   }
+
 }
 
 @keyframes rotateRing {
+
   to {
     transform: rotate(360deg);
   }
+
 }
 
 @keyframes rotateRingReverse {
+
   to {
     transform: rotate(-360deg);
   }
+
 }
 
 @keyframes confidenceGrow {
+
   from {
     width: 0;
   }
+
 }
 
 
 /* =========================================
    MOBILE
-   ========================================= */
+========================================= */
 
 @media (max-width: 650px) {
 
@@ -658,4 +759,13 @@
   .confidence-number {
     font-size: 1.3rem;
   }
+
+  .interpretation-box {
+    padding: 13px;
+  }
+
+  .interpretation-box p {
+    font-size: 0.58rem;
+  }
+
 }
