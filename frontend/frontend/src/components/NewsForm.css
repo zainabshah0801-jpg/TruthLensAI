@@ -1,60 +1,69 @@
-/* =========================================
+/* =========================================================
    TRUTHLENS AI — NEWS FORM
-   ========================================= */
+   ========================================================= */
 
 .news-form-container {
   width: 100%;
 }
 
 
-/* =========================================
+/* =========================================================
    MAIN CARD
-   ========================================= */
+   ========================================================= */
 
 .verify-card {
   position: relative;
 
+  width: 100%;
+  box-sizing: border-box;
+
   padding: 32px;
 
   border: 1px solid rgba(255, 255, 255, 0.08);
-
-  border-radius: 0 0 24px 24px;
+  border-radius: 20px;
 
   background:
     linear-gradient(
       145deg,
-      rgba(255,255,255,0.055),
-      rgba(255,255,255,0.018)
+      rgba(255, 255, 255, 0.055),
+      rgba(255, 255, 255, 0.015)
     );
 
   backdrop-filter: blur(20px);
 
   overflow: hidden;
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.18);
 }
 
 
-/* =========================================
+/* =========================================================
    HEADER
-   ========================================= */
+   ========================================================= */
 
 .form-card-header {
   display: flex;
-
   align-items: center;
 
   gap: 14px;
+
+  padding-bottom: 22px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .form-icon {
-  width: 48px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
+
+  flex-shrink: 0;
 
   display: flex;
-
   align-items: center;
   justify-content: center;
 
-  border-radius: 14px;
+  border-radius: 13px;
 
   color: #78e5ff;
 
@@ -62,7 +71,7 @@
 
   border: 1px solid rgba(100, 130, 255, 0.2);
 
-  font-size: 1.3rem;
+  font-size: 1.1rem;
 
   box-shadow:
     0 0 25px rgba(80, 120, 255, 0.08);
@@ -73,7 +82,7 @@
 
   color: #7385ff;
 
-  font-size: 0.58rem;
+  font-size: 0.56rem;
 
   font-weight: 900;
 
@@ -81,25 +90,26 @@
 }
 
 .form-card-header h2 {
-  margin-top: 4px;
+  margin: 4px 0 0;
 
   color: #d7ddea;
 
-  font-size: 1.15rem;
+  font-size: 1.1rem;
+
+  font-weight: 800;
 }
 
 .secure-badge {
   margin-left: auto;
 
   display: flex;
-
   align-items: center;
 
   gap: 7px;
 
   color: #62dcbf;
 
-  font-size: 0.55rem;
+  font-size: 0.52rem;
 
   font-weight: 900;
 
@@ -107,46 +117,80 @@
 }
 
 .secure-badge span {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 
   border-radius: 50%;
 
   background: #62dcbf;
 
-  box-shadow: 0 0 10px #62dcbf;
+  box-shadow:
+    0 0 10px #62dcbf;
 }
 
 
-/* =========================================
+/* =========================================================
    DESCRIPTION
-   ========================================= */
+   ========================================================= */
 
 .form-description {
-  max-width: 700px;
+  max-width: 720px;
 
-  margin: 20px 0;
+  margin: 20px 0 25px;
 
   color: #737f96;
 
-  font-size: 0.8rem;
+  font-size: 0.78rem;
 
   line-height: 1.7;
 }
 
 
-/* =========================================
+/* =========================================================
+   INPUT LABEL
+   ========================================================= */
+
+.input-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 9px;
+}
+
+.input-label-row label {
+  color: #687590;
+
+  font-size: 0.54rem;
+
+  font-weight: 900;
+
+  letter-spacing: 1.5px;
+}
+
+.input-label-row span {
+  color: #46526a;
+
+  font-size: 0.48rem;
+
+  font-weight: 800;
+
+  letter-spacing: 1px;
+}
+
+
+/* =========================================================
    TEXTAREA
-   ========================================= */
+   ========================================================= */
 
 .textarea-wrapper {
   position: relative;
 
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
-  border-radius: 17px;
+  border-radius: 15px;
 
-  background: rgba(4, 7, 20, 0.45);
+  background: rgba(4, 7, 20, 0.5);
 
   overflow: hidden;
 
@@ -154,39 +198,40 @@
 }
 
 .textarea-wrapper:focus-within {
-  border-color: rgba(105,130,255,0.45);
+  border-color: rgba(105, 130, 255, 0.45);
 
   box-shadow:
-    0 0 35px rgba(75,100,255,0.08);
+    0 0 30px rgba(75, 100, 255, 0.08);
 }
 
 .textarea-topbar {
   display: flex;
-
   justify-content: space-between;
 
-  padding: 13px 16px;
+  padding: 11px 15px;
 
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
   color: #56637b;
 
-  font-size: 0.55rem;
+  font-size: 0.48rem;
 
   font-weight: 900;
 
-  letter-spacing: 1.5px;
+  letter-spacing: 1.4px;
 }
 
 .textarea-wrapper textarea {
+  display: block;
+
   width: 100%;
+  min-height: 190px;
 
-  min-height: 210px;
+  box-sizing: border-box;
 
-  padding: 20px;
+  padding: 18px;
 
   border: none;
-
   outline: none;
 
   resize: vertical;
@@ -197,9 +242,9 @@
 
   font-family: inherit;
 
-  font-size: 0.9rem;
+  font-size: 0.82rem;
 
-  line-height: 1.8;
+  line-height: 1.75;
 }
 
 .textarea-wrapper textarea::placeholder {
@@ -207,15 +252,15 @@
 }
 
 .textarea-wrapper textarea:disabled {
-  opacity: 0.7;
+  opacity: 0.65;
 
   cursor: wait;
 }
 
 
-/* =========================================
+/* =========================================================
    SCANNING LINE
-   ========================================= */
+   ========================================================= */
 
 .textarea-scan {
   position: absolute;
@@ -227,43 +272,46 @@
 
   height: 2px;
 
-  background: linear-gradient(
-    90deg,
-    transparent,
-    #62e5ff,
-    #7285ff,
-    transparent
-  );
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #62e5ff,
+      #7285ff,
+      transparent
+    );
 
   box-shadow:
     0 0 15px #62e5ff;
 
-  animation: textareaScan 1.8s ease-in-out infinite;
+  animation:
+    textareaScan 1.8s ease-in-out infinite;
 }
 
 
-/* =========================================
+/* =========================================================
    EXAMPLES
-   ========================================= */
+   ========================================================= */
 
 .examples {
   display: flex;
-
   align-items: center;
 
   gap: 8px;
 
-  margin-top: 13px;
+  margin-top: 12px;
 
   flex-wrap: wrap;
 }
 
 .examples > span {
-  margin-right: 5px;
+  margin-right: 4px;
 
   color: #4e5a72;
 
-  font-size: 0.55rem;
+  font-size: 0.5rem;
 
   font-weight: 900;
 
@@ -273,15 +321,17 @@
 .examples button {
   padding: 7px 11px;
 
-  border: 1px solid rgba(255,255,255,0.07);
+  border: 1px solid rgba(255, 255, 255, 0.07);
 
   border-radius: 8px;
 
-  background: rgba(255,255,255,0.025);
+  background: rgba(255, 255, 255, 0.025);
 
   color: #6f7b94;
 
-  font-size: 0.58rem;
+  font-family: inherit;
+
+  font-size: 0.53rem;
 
   cursor: pointer;
 
@@ -291,77 +341,147 @@
 .examples button:hover {
   color: #8c9cff;
 
-  border-color: rgba(105,125,255,0.25);
+  border-color: rgba(105, 125, 255, 0.25);
 
-  background: rgba(95,115,255,0.06);
+  background: rgba(95, 115, 255, 0.06);
+
+  transform: translateY(-1px);
+}
+
+.examples button:disabled {
+  opacity: 0.45;
+
+  cursor: wait;
 }
 
 
-/* =========================================
+/* =========================================================
+   SOURCE URL
+   ========================================================= */
+
+.source-section {
+  margin-top: 24px;
+}
+
+.source-section input {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 14px 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 12px;
+
+  outline: none;
+
+  background: rgba(4, 7, 20, 0.45);
+
+  color: #cbd3e2;
+
+  font-family: inherit;
+
+  font-size: 0.75rem;
+
+  transition: 0.3s;
+}
+
+.source-section input:focus {
+  border-color: rgba(105, 130, 255, 0.4);
+
+  box-shadow:
+    0 0 25px rgba(75, 100, 255, 0.06);
+}
+
+.source-section input::placeholder {
+  color: #414b61;
+}
+
+.source-section input:disabled {
+  opacity: 0.6;
+
+  cursor: wait;
+}
+
+.source-help {
+  margin: 8px 0 0;
+
+  color: #515e76;
+
+  font-size: 0.55rem;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
    ERROR
-   ========================================= */
+   ========================================================= */
 
 .form-error {
   display: flex;
-
   align-items: center;
 
   gap: 9px;
 
-  margin-top: 14px;
+  margin-top: 15px;
 
-  padding: 10px 13px;
+  padding: 11px 13px;
 
-  border: 1px solid rgba(255,90,110,0.15);
+  border: 1px solid rgba(255, 90, 110, 0.15);
 
   border-radius: 10px;
 
-  background: rgba(255,70,90,0.04);
+  background: rgba(255, 70, 90, 0.04);
 
   color: #ff8494;
 
-  font-size: 0.68rem;
+  font-size: 0.64rem;
 }
 
 .form-error span {
-  width: 17px;
-  height: 17px;
+  width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
 
   display: flex;
-
   align-items: center;
   justify-content: center;
 
   border-radius: 50%;
 
-  background: rgba(255,80,100,0.15);
+  background: rgba(255, 80, 100, 0.15);
 
   font-weight: 900;
 }
 
+.form-error p {
+  margin: 0;
+}
 
-/* =========================================
+
+/* =========================================================
    VERIFY BUTTON
-   ========================================= */
+   ========================================================= */
 
 .verify-button {
   width: 100%;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
   gap: 12px;
 
-  margin-top: 20px;
+  margin-top: 22px;
 
-  padding: 17px;
+  padding: 16px;
 
   border: none;
 
-  border-radius: 13px;
+  border-radius: 12px;
 
   background:
     linear-gradient(
@@ -371,37 +491,37 @@
       #00cfe5
     );
 
+  background-size: 200%;
+
   color: white;
 
   font-family: inherit;
 
-  font-size: 0.78rem;
+  font-size: 0.7rem;
 
   font-weight: 900;
 
-  letter-spacing: 0.5px;
+  letter-spacing: 0.7px;
 
   cursor: pointer;
 
   box-shadow:
-    0 15px 35px rgba(70,110,255,0.2);
+    0 15px 35px rgba(70, 110, 255, 0.2);
 
   transition: 0.3s;
-
-  background-size: 200%;
 }
 
 .verify-button:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 
   background-position: right;
 
   box-shadow:
-    0 20px 45px rgba(70,130,255,0.35);
+    0 20px 45px rgba(70, 130, 255, 0.3);
 }
 
 .button-icon {
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .button-arrow {
@@ -413,49 +533,46 @@
 }
 
 
-/* =========================================
+/* =========================================================
    ANALYSIS PANEL
-   ========================================= */
+   ========================================================= */
 
 .analysis-panel {
   display: flex;
-
   align-items: center;
 
-  gap: 25px;
+  gap: 22px;
 
   margin-top: 20px;
 
   padding: 20px;
 
-  border: 1px solid rgba(100,125,255,0.15);
+  border: 1px solid rgba(100, 125, 255, 0.15);
 
   border-radius: 15px;
 
   background:
-    rgba(60,80,180,0.035);
+    rgba(60, 80, 180, 0.035);
 }
 
 .analysis-orb {
   position: relative;
 
+  width: 75px;
+  height: 75px;
+
   flex-shrink: 0;
 
-  width: 80px;
-  height: 80px;
-
   display: flex;
-
   align-items: center;
   justify-content: center;
 }
 
 .analysis-core {
-  width: 35px;
-  height: 35px;
+  width: 34px;
+  height: 34px;
 
   display: flex;
-
   align-items: center;
   justify-content: center;
 
@@ -470,46 +587,53 @@
 
   color: white;
 
-  box-shadow:
-    0 0 25px rgba(90,150,255,0.7);
+  font-size: 0.8rem;
 
-  animation: analysisPulse 1.2s infinite;
+  box-shadow:
+    0 0 25px rgba(90, 150, 255, 0.7);
+
+  animation:
+    analysisPulse 1.2s infinite;
 }
 
 .analysis-ring {
   position: absolute;
 
-  border: 1px solid rgba(100,130,255,0.45);
+  border: 1px solid rgba(100, 130, 255, 0.45);
 
   border-radius: 50%;
 }
 
 .ring-one {
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
 
   border-style: dashed;
 
-  animation: spin 3s linear infinite;
+  animation:
+    spin 3s linear infinite;
 }
 
 .ring-two {
-  width: 78px;
-  height: 78px;
+  width: 74px;
+  height: 74px;
 
   opacity: 0.35;
 
-  animation: spinReverse 5s linear infinite;
+  animation:
+    spinReverse 5s linear infinite;
 }
 
 .analysis-info {
   flex: 1;
+
+  min-width: 0;
 }
 
 .analysis-title {
   color: #cdd5e5;
 
-  font-size: 0.82rem;
+  font-size: 0.76rem;
 
   font-weight: 800;
 }
@@ -519,17 +643,19 @@
 
   color: #65718a;
 
-  font-size: 0.62rem;
+  font-size: 0.58rem;
+
+  line-height: 1.5;
 }
 
 .progress-track {
   height: 4px;
 
-  margin-top: 15px;
+  margin-top: 14px;
 
   border-radius: 10px;
 
-  background: rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.06);
 
   overflow: hidden;
 }
@@ -547,17 +673,18 @@
     );
 
   box-shadow:
-    0 0 12px rgba(90,200,255,0.5);
+    0 0 12px rgba(90, 200, 255, 0.5);
 
-  transition: width 0.7s ease;
+  transition:
+    width 0.25s ease;
 }
 
 .analysis-steps {
   display: flex;
 
-  gap: 14px;
+  gap: 13px;
 
-  margin-top: 13px;
+  margin-top: 12px;
 
   flex-wrap: wrap;
 }
@@ -565,13 +692,13 @@
 .step {
   color: #4e5a71;
 
-  font-size: 0.54rem;
+  font-size: 0.5rem;
 
   transition: 0.3s;
 }
 
 .step span {
-  margin-right: 5px;
+  margin-right: 4px;
 }
 
 .step.active {
@@ -579,9 +706,9 @@
 }
 
 
-/* =========================================
+/* =========================================================
    TRUST STRIP
-   ========================================= */
+   ========================================================= */
 
 .form-trust-strip {
   display: grid;
@@ -589,33 +716,36 @@
   grid-template-columns:
     repeat(4, 1fr);
 
-  margin-top: 12px;
+  gap: 0;
 
-  padding: 15px;
+  margin-top: 13px;
 
-  border: 1px solid rgba(255,255,255,0.05);
+  padding: 13px;
+
+  border: 1px solid rgba(255, 255, 255, 0.05);
 
   border-radius: 12px;
 
-  background: rgba(255,255,255,0.015);
+  background:
+    rgba(255, 255, 255, 0.015);
 }
 
 .form-trust-strip div {
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
-  gap: 7px;
+  gap: 6px;
 
   color: #525e76;
 
-  font-size: 0.5rem;
+  font-size: 0.47rem;
 
   font-weight: 900;
 
-  letter-spacing: 0.8px;
+  letter-spacing: 0.6px;
+
+  text-align: center;
 }
 
 .form-trust-strip span {
@@ -623,14 +753,13 @@
 }
 
 
-/* =========================================
+/* =========================================================
    ANIMATIONS
-   ========================================= */
+   ========================================================= */
 
 @keyframes textareaScan {
   0% {
     top: 45px;
-
     opacity: 0;
   }
 
@@ -644,24 +773,24 @@
 
   100% {
     top: calc(100% - 5px);
-
     opacity: 0;
   }
 }
 
 @keyframes analysisPulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(0.9);
 
     box-shadow:
-      0 0 20px rgba(90,150,255,0.5);
+      0 0 20px rgba(90, 150, 255, 0.5);
   }
 
   50% {
     transform: scale(1.12);
 
     box-shadow:
-      0 0 35px rgba(90,180,255,0.85);
+      0 0 35px rgba(90, 180, 255, 0.85);
   }
 }
 
@@ -678,9 +807,9 @@
 }
 
 
-/* =========================================
+/* =========================================================
    MOBILE
-   ========================================= */
+   ========================================================= */
 
 @media (max-width: 650px) {
 
@@ -688,18 +817,37 @@
     padding: 20px;
   }
 
+  .form-card-header {
+    gap: 10px;
+  }
+
+  .form-icon {
+    width: 40px;
+    height: 40px;
+
+    font-size: 0.9rem;
+  }
+
+  .form-card-header h2 {
+    font-size: 0.95rem;
+  }
+
   .secure-badge {
     display: none;
   }
 
-  .form-card-header h2 {
-    font-size: 1rem;
+  .form-description {
+    font-size: 0.7rem;
   }
 
   .analysis-panel {
     flex-direction: column;
 
     text-align: center;
+  }
+
+  .analysis-info {
+    width: 100%;
   }
 
   .analysis-steps {
@@ -709,6 +857,39 @@
   .form-trust-strip {
     grid-template-columns: 1fr 1fr;
 
-    gap: 15px;
+    gap: 14px;
+  }
+
+  .source-section input {
+    font-size: 0.7rem;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL SCREENS
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+  .verify-card {
+    padding: 16px;
+  }
+
+  .examples {
+    gap: 6px;
+  }
+
+  .examples > span {
+    width: 100%;
+    margin-bottom: 2px;
+  }
+
+  .textarea-wrapper textarea {
+    min-height: 160px;
+  }
+
+  .form-trust-strip div {
+    font-size: 0.42rem;
   }
 }

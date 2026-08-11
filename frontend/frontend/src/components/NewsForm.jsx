@@ -1,98 +1,97 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./NewsForm.css";
 
 function NewsForm({ onResult }) {
   const [text, setText] = useState("");
+  const [sourceUrl, setSourceUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [analysisStep, setAnalysisStep] = useState(0);
+  const [progress, setProgress] = useState(0);
 
-  const analysisSteps = [
-    "Initializing TruthLens AI",
-    "Reading submitted content",
-    "Analyzing information",
-    "Generating AI prediction",
+  const examples = [
+    "Scientists discover a new planet that may support life.",
+    "Government announces a new technology initiative.",
+    "Social media post claims a common food can cure every disease."
   ];
 
-  useEffect(() => {
-    if (!loading) {
-      return;
-    }
-
-    const interval = setInterval(() => {
-      setAnalysisStep((current) =>
-        current < analysisSteps.length - 1
-          ? current + 1
-          : current
-      );
-    }, 900);
-
-    return () => clearInterval(interval);
-  }, [loading, analysisSteps.length]);
-
-  const handleVerify = async () => {
-    if (!text.trim()) {
-      setError("Please enter some news text.");
-      return;
-    }
-
-    setLoading(true);
+  // Fill the textarea with an example
+  const fillExample = (example) => {
+    setText(example);
     setError("");
-    setAnalysisStep(0);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!text.trim()) {
+      setError("Please enter some news or information to analyze.");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+    setProgress(15);
 
     try {
-      const response = await fetch(
-        "http://127.0.0.1:5000/predict",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            text: text,
-          }),
-        }
-      );
+      // Progress animation
+      const progressTimer = setInterval(() => {
+        setProgress((previous) => {
+          if (previous >= 90) {
+            clearInterval(progressTimer);
+            return 90;
+          }
+
+          return previous + 10;
+        });
+      }, 250);
+
+      const response = await fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: text.trim(),
+          source_url: sourceUrl.trim(),
+        }),
+      });
+
+      clearInterval(progressTimer);
 
       if (!response.ok) {
-        throw new Error("Backend error");
+        throw new Error("Server could not process the request.");
       }
 
       const data = await response.json();
 
-      console.log("AI RESULT:", data);
+      setProgress(100);
 
-      setAnalysisStep(3);
+      setTimeout(() => {
+        onResult(data);
+        setLoading(false);
+        setProgress(0);
+      }, 500);
 
-      await new Promise((resolve) =>
-        setTimeout(resolve, 700)
-      );
-
-      onResult(data);
-
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      setLoading(false);
+      setProgress(0);
 
       setError(
-        "Could not connect to the TruthLens AI backend."
+        err.message ||
+        "Unable to connect to the TruthLens AI server."
       );
-    } finally {
-      setLoading(false);
     }
-  };
-
-  const handleExample = (example) => {
-    setText(example);
-    setError("");
   };
 
   return (
     <div className="news-form-container">
 
-      {/* INPUT CARD */}
+      <form
+        className="verify-card"
+        onSubmit={handleSubmit}
+      >
 
-      <div className="verify-card">
-
+        {/* HEADER */}
         <div className="form-card-header">
 
           <div className="form-icon">
@@ -101,132 +100,155 @@ function NewsForm({ onResult }) {
 
           <div>
             <span className="form-label">
-              TRUTHLENS INPUT
+              TRUTHLENS AI
             </span>
 
             <h2>
-              What do you want to verify?
+              Submit Information
             </h2>
           </div>
 
           <div className="secure-badge">
             <span></span>
-            SECURE
+            SECURE ANALYSIS
           </div>
 
         </div>
 
 
+        {/* DESCRIPTION */}
         <p className="form-description">
-          Paste a headline, article or social media
-          claim below. TruthLens AI will analyze the
-          submitted content.
+          Paste a news article, headline, social media post,
+          or any information you want TruthLens AI to examine.
         </p>
 
 
-        {/* TEXT AREA */}
+        {/* NEWS TEXT */}
+        <div className="input-section">
 
-        <div
-          className={`textarea-wrapper ${
-            loading ? "is-loading" : ""
-          }`}
-        >
+          <div className="input-label-row">
 
-          <div className="textarea-topbar">
-
-            <span>
-              NEWS / CLAIM
-            </span>
+            <label>
+              NEWS / INFORMATION
+            </label>
 
             <span>
-              {text.length} / 2000
+              {text.length} characters
             </span>
 
           </div>
 
-          <textarea
-            value={text}
-            maxLength={2000}
-            disabled={loading}
-            onChange={(e) => {
-              setText(e.target.value);
-              setError("");
-            }}
-            placeholder="Paste the information you want TruthLens AI to analyze..."
-          />
+          <div className="textarea-wrapper">
 
-          {loading && (
-            <div className="textarea-scan"></div>
-          )}
+            <div className="textarea-topbar">
+              <span>CONTENT INPUT</span>
+              <span>AI READY</span>
+            </div>
+
+            <textarea
+              value={text}
+              onChange={(e) => {
+                setText(e.target.value);
+                setError("");
+              }}
+              placeholder="Paste a news article, headline or social media post..."
+              disabled={loading}
+            />
+
+            {loading && (
+              <div className="textarea-scan"></div>
+            )}
+
+          </div>
 
         </div>
 
 
         {/* EXAMPLES */}
+        <div className="examples">
 
-        {!loading && (
-          <div className="examples">
+          <span>TRY AN EXAMPLE:</span>
 
-            <span>TRY AN EXAMPLE</span>
-
+          {examples.map((example, index) => (
             <button
               type="button"
-              onClick={() =>
-                handleExample(
-                  "Scientists announce a new breakthrough that could improve renewable energy technology."
-                )
-              }
+              key={index}
+              onClick={() => fillExample(example)}
+              disabled={loading}
             >
-              Example claim
+              Example {index + 1}
             </button>
+          ))}
 
-            <button
-              type="button"
-              onClick={() =>
-                handleExample(
-                  "A viral social media post claims that drinking a certain beverage can instantly cure every disease."
-                )
-              }
-            >
-              Viral claim
-            </button>
+        </div>
+
+
+        {/* SOURCE URL */}
+        <div className="source-section">
+
+          <div className="input-label-row">
+
+            <label>
+              NEWS / INFORMATION SOURCE
+            </label>
+
+            <span>
+              OPTIONAL
+            </span>
 
           </div>
-        )}
+
+          <input
+            type="url"
+            value={sourceUrl}
+            onChange={(e) => setSourceUrl(e.target.value)}
+            placeholder="https://example.com/article"
+            disabled={loading}
+          />
+
+          <p className="source-help">
+            Add the original article or information source
+            to let TruthLens verify the domain.
+          </p>
+
+        </div>
 
 
         {/* ERROR */}
-
         {error && (
           <div className="form-error">
+
             <span>!</span>
-            {error}
+
+            <p>
+              {error}
+            </p>
+
           </div>
         )}
 
 
-        {/* BUTTON / ANALYSIS */}
-
-        {!loading ? (
-
+        {/* VERIFY BUTTON */}
+        {!loading && (
           <button
-            type="button"
+            type="submit"
             className="verify-button"
-            onClick={handleVerify}
           >
             <span className="button-icon">
               ✦
             </span>
 
-            Analyze with TruthLens AI
+            VERIFY INFORMATION
 
             <span className="button-arrow">
               →
             </span>
           </button>
+        )}
 
-        ) : (
 
+        {/* ANALYSIS PANEL */}
+        {loading && (
           <div className="analysis-panel">
 
             <div className="analysis-orb">
@@ -245,11 +267,12 @@ function NewsForm({ onResult }) {
             <div className="analysis-info">
 
               <div className="analysis-title">
-                {analysisSteps[analysisStep]}
+                TruthLens AI is analyzing...
               </div>
 
               <div className="analysis-subtitle">
-                TruthLens AI is processing your submission
+                Processing information through the AI
+                classification engine.
               </div>
 
 
@@ -258,11 +281,7 @@ function NewsForm({ onResult }) {
                 <div
                   className="progress-bar"
                   style={{
-                    width: `${
-                      ((analysisStep + 1) /
-                        analysisSteps.length) *
-                      100
-                    }%`,
+                    width: `${progress}%`,
                   }}
                 ></div>
 
@@ -271,69 +290,76 @@ function NewsForm({ onResult }) {
 
               <div className="analysis-steps">
 
-                {analysisSteps.map(
-                  (step, index) => (
+                <div
+                  className={`step ${
+                    progress >= 20 ? "active" : ""
+                  }`}
+                >
+                  <span>✓</span>
+                  INPUT
+                </div>
 
-                    <div
-                      key={step}
-                      className={
-                        index <= analysisStep
-                          ? "step active"
-                          : "step"
-                      }
-                    >
+                <div
+                  className={`step ${
+                    progress >= 40 ? "active" : ""
+                  }`}
+                >
+                  <span>✓</span>
+                  ANALYZING
+                </div>
 
-                      <span>
-                        {index < analysisStep
-                          ? "✓"
-                          : index === analysisStep
-                          ? "●"
-                          : "○"}
-                      </span>
+                <div
+                  className={`step ${
+                    progress >= 70 ? "active" : ""
+                  }`}
+                >
+                  <span>✓</span>
+                  CLASSIFYING
+                </div>
 
-                      {step}
-
-                    </div>
-
-                  )
-                )}
+                <div
+                  className={`step ${
+                    progress >= 100 ? "active" : ""
+                  }`}
+                >
+                  <span>✓</span>
+                  COMPLETE
+                </div>
 
               </div>
 
             </div>
 
           </div>
-
         )}
 
-      </div>
 
+        {/* TRUST STRIP */}
+        <div className="form-trust-strip">
 
-      {/* TRUST STRIP */}
+          <div>
+            <span>◉</span>
+            AI ANALYSIS
+          </div>
 
-      <div className="form-trust-strip">
+          <div>
+            <span>◇</span>
+            MODEL BASED
+          </div>
 
-        <div>
-          <span>◉</span>
-          AI-POWERED
+          <div>
+            <span>⚡</span>
+            FAST PROCESSING
+          </div>
+
+          <div>
+            <span>✓</span>
+            PRIVACY AWARE
+          </div>
+
         </div>
 
-        <div>
-          <span>⚡</span>
-          FAST ANALYSIS
-        </div>
-
-        <div>
-          <span>◇</span>
-          INTELLIGENT RESULTS
-        </div>
-
-        <div>
-          <span>🔒</span>
-          YOUR INPUT STAYS PRIVATE
-        </div>
-
-      </div>
+      </form>
 
     </div>
   );

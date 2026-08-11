@@ -1,6 +1,10 @@
 from urllib.parse import urlparse
 
 
+# ==========================================
+# RECOGNIZED / TRUSTED DOMAINS
+# ==========================================
+
 TRUSTED_DOMAINS = {
     "reuters.com",
     "apnews.com",
@@ -18,7 +22,12 @@ TRUSTED_DOMAINS = {
 }
 
 
+# ==========================================
+# NORMALIZE DOMAIN
+# ==========================================
+
 def normalize_domain(domain):
+
     domain = domain.lower().strip()
 
     if domain.startswith("www."):
@@ -27,8 +36,13 @@ def normalize_domain(domain):
     return domain
 
 
+# ==========================================
+# VERIFY SOURCE
+# ==========================================
+
 def verify_source(url):
 
+    # No URL provided
     if not url or not url.strip():
         return {
             "status": "NO SOURCE",
@@ -39,14 +53,18 @@ def verify_source(url):
 
     url = url.strip()
 
+    # Add HTTPS if the user enters only the domain
     if not url.startswith(("http://", "https://")):
         url = "https://" + url
 
     try:
+
         parsed = urlparse(url)
+
         domain = normalize_domain(parsed.netloc)
 
     except Exception:
+
         return {
             "status": "INVALID",
             "level": "UNKNOWN",
@@ -54,7 +72,9 @@ def verify_source(url):
             "message": "The provided URL could not be processed."
         }
 
+    # No domain found
     if not domain:
+
         return {
             "status": "INVALID",
             "level": "UNKNOWN",
@@ -62,6 +82,11 @@ def verify_source(url):
             "message": "The provided URL does not contain a valid domain."
         }
 
+    # Remove possible port number
+    if ":" in domain:
+        domain = domain.split(":")[0]
+
+    # Check whether the domain is recognized
     is_trusted = (
         domain in TRUSTED_DOMAINS
         or any(
@@ -70,7 +95,12 @@ def verify_source(url):
         )
     )
 
+    # ==========================================
+    # RECOGNIZED SOURCE
+    # ==========================================
+
     if is_trusted:
+
         return {
             "status": "RECOGNIZED SOURCE",
             "level": "HIGH",
@@ -80,6 +110,10 @@ def verify_source(url):
                 "news or institutional domain."
             )
         }
+
+    # ==========================================
+    # UNVERIFIED SOURCE
+    # ==========================================
 
     return {
         "status": "UNVERIFIED SOURCE",
@@ -92,6 +126,20 @@ def verify_source(url):
     }
 
 
+# ==========================================
+# TEST
+# ==========================================
+
 if __name__ == "__main__":
-    print(verify_source("https://www.reuters.com"))
-    print(verify_source("https://example.com"))
+
+    print(
+        verify_source(
+            "https://www.reuters.com"
+        )
+    )
+
+    print(
+        verify_source(
+            "https://example.com"
+        )
+    )
