@@ -1,22 +1,21 @@
 from transformers import pipeline
 
+# =========================================
+# TRUTHLENS AI — LIGHTWEIGHT FAKE NEWS MODEL
+# =========================================
 
-# =========================================
-# TRUTHLENS AI — FAKE NEWS CLASSIFIER
-# =========================================
+MODEL_NAME = "Aakash22134/fake_news_DistilBert"
 
 classifier = pipeline(
     "text-classification",
-    model="hamzab/roberta-fake-news-classification"
+    model=MODEL_NAME,
+    device=-1
 )
 
 
 def predict_news(text):
 
-    # -----------------------------------------
-    # EMPTY INPUT CHECK
-    # -----------------------------------------
-
+    # Empty input
     if not text or not text.strip():
         return {
             "score": 0,
@@ -27,98 +26,53 @@ def predict_news(text):
             "analysis_status": "NOT PROCESSED"
         }
 
+    # Limit input size
+    text = text.strip()[:1500]
 
-    # -----------------------------------------
-    # CLEAN INPUT
-    # -----------------------------------------
-
-    text = text.strip()[:2000]
-
-
-    # -----------------------------------------
-    # AI MODEL PREDICTION
-    # -----------------------------------------
-
-    result = classifier(text)[0]
+    # AI prediction
+    result = classifier(
+        text,
+        truncation=True,
+        max_length=256
+    )[0]
 
     raw_label = result["label"]
+    confidence = round(result["score"] * 100, 2)
 
-    confidence = round(
-        result["score"] * 100,
-        2
-    )
+    # Convert model output
+    label_lower = raw_label.lower()
 
-
-    # -----------------------------------------
-    # CONVERT MODEL OUTPUT
-    # -----------------------------------------
-
-    if raw_label.upper() in [
-        "REAL",
-        "TRUE",
-        "LABEL_1"
-    ]:
-
+    if "real" in label_lower or "true" in label_lower:
         label = "Likely Genuine"
-
     else:
-
         label = "Potentially Fake"
 
-
-    # -----------------------------------------
-    # CONFIDENCE LEVEL
-    # -----------------------------------------
-
+    # Confidence level
     if confidence >= 80:
-
         confidence_level = "HIGH"
-
     elif confidence >= 60:
-
         confidence_level = "MODERATE"
-
     else:
-
         confidence_level = "LOW"
 
-
-    # -----------------------------------------
-    # ANALYSIS MESSAGE
-    # -----------------------------------------
-
+    # Message
     if label == "Likely Genuine":
-
         message = (
             "The AI model detected patterns "
             "more consistent with genuine information."
         )
-
     else:
-
         message = (
             "The AI model detected patterns "
             "that may be associated with unreliable "
             "or misleading information."
         )
 
-
-    # -----------------------------------------
-    # RETURN STRUCTURED RESULT
-    # -----------------------------------------
-
     return {
-
         "score": confidence,
-
         "label": label,
-
         "message": message,
-
         "model_label": raw_label,
-
         "confidence_level": confidence_level,
-
         "analysis_status": "COMPLETE"
-
     }
