@@ -1,16 +1,16 @@
-from transformers import pipeline
+import os
+import requests
 
 # =========================================
-# TRUTHLENS AI — LIGHTWEIGHT FAKE NEWS MODEL
+# TRUTHLENS AI — REMOTE AI CLASSIFIER
 # =========================================
 
-MODEL_NAME = "Aakash22134/fake_news_DistilBert"
-
-classifier = pipeline(
-    "text-classification",
-    model=MODEL_NAME,
-    device=-1
+HF_API_URL = (
+    "https://router.huggingface.co/hf-inference/models/"
+    "hamzab/roberta-fake-news-classification"
 )
+
+HF_TOKEN = os.getenv("HF_TOKEN")
 
 
 def predict_news(text):
@@ -26,28 +26,83 @@ def predict_news(text):
             "analysis_status": "NOT PROCESSED"
         }
 
-    # Limit input size
-    text = text.strip()[:1500]
+    text = text.strip()[:2000]
 
-    # AI prediction
-    result = classifier(
-        text,
-        truncation=True,
-        max_length=256
-    )[0]
+    # -----------------------------------------
+    # CALL HUGGING FACE INFERENCE API
+    # -----------------------------------------
 
-    raw_label = result["label"]
-    confidence = round(result["score"] * 100, 2)
+    headers = {}
 
-    # Convert model output
+    if HF_TOKEN:
+        headers["Authorization"] = f"Bearer {HF_TOKEN}"
+
+    try:
+        response = requests.post(
+            HF_API_URL,
+            headers=headers,
+            json={"inputs": text},
+            timeout=60
+        )
+
+        response.raise_for_status()
+
+        result = response.json()
+
+        # Hugging Face normally returns:
+        # [[{"label": "...", "score": ...}]]
+
+        if isinstance(result, list) and result:
+            predictions = result[0]
+
+            if isinstance(predictions, list):
+                prediction = max(
+                    predictions,
+                    key=lambda x: x.get("score", 0)
+                )
+            else:
+                prediction = predictions
+
+        else:
+            raise ValueError("Unexpected model response.")
+
+        raw_label = str(prediction.get("label", "UNKNOWN"))
+        confidence = round(
+            float(prediction.get("score", 0)) * 100,
+            2
+        )
+
+    except Exception as e:
+
+        return {
+            "score": 0,
+            "label": "Analysis Unavailable",
+            "message": "The AI model could not be reached.",
+            "model_label": "ERROR",
+            "confidence_level": "NONE",
+            "analysis_status": "FAILED",
+            "error": str(e)
+        }
+
+    # -----------------------------------------
+    # CONVERT MODEL OUTPUT
+    # -----------------------------------------
+
     label_lower = raw_label.lower()
 
-    if "real" in label_lower or "true" in label_lower:
+    if (
+        "real" in label_lower
+        or "true" in label_lower
+        or label_lower == "label_1"
+    ):
         label = "Likely Genuine"
     else:
         label = "Potentially Fake"
 
-    # Confidence level
+    # -----------------------------------------
+    # CONFIDENCE LEVEL
+    # -----------------------------------------
+
     if confidence >= 80:
         confidence_level = "HIGH"
     elif confidence >= 60:
@@ -55,7 +110,10 @@ def predict_news(text):
     else:
         confidence_level = "LOW"
 
-    # Message
+    # -----------------------------------------
+    # MESSAGE
+    # -----------------------------------------
+
     if label == "Likely Genuine":
         message = (
             "The AI model detected patterns "
