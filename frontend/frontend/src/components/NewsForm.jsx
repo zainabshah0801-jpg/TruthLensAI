@@ -1,12 +1,26 @@
 import { useState } from "react";
 import "./NewsForm.css";
 
+// Backend URL
+// For local testing it uses Flask on port 5000.
+// For Vercel deployment, VITE_API_URL will come from your .env file.
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  "http://127.0.0.1:5000";
+
+
 function NewsForm({ onResult }) {
+
   const [text, setText] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [progress, setProgress] = useState(0);
+
+
+  // ==========================================
+  // EXAMPLE NEWS
+  // ==========================================
 
   const examples = [
     "Scientists discover a new planet that may support life.",
@@ -14,76 +28,211 @@ function NewsForm({ onResult }) {
     "Social media post claims a common food can cure every disease."
   ];
 
-  // Fill the textarea with an example
+
+  // ==========================================
+  // FILL EXAMPLE
+  // ==========================================
+
   const fillExample = (example) => {
+
     setText(example);
     setError("");
+
   };
 
+
+  // ==========================================
+  // SUBMIT / VERIFY INFORMATION
+  // ==========================================
+
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
+
+    // ------------------------------
+    // CHECK EMPTY INPUT
+    // ------------------------------
+
     if (!text.trim()) {
-      setError("Please enter some news or information to analyze.");
+
+      setError(
+        "Please enter some news or information to analyze."
+      );
+
       return;
     }
+
 
     setError("");
     setLoading(true);
     setProgress(15);
 
+
+    let progressTimer;
+
+
     try {
-      // Progress animation
-      const progressTimer = setInterval(() => {
+
+      // ------------------------------
+      // PROGRESS ANIMATION
+      // ------------------------------
+
+      progressTimer = setInterval(() => {
+
         setProgress((previous) => {
+
           if (previous >= 90) {
+
             clearInterval(progressTimer);
+
             return 90;
           }
 
           return previous + 10;
+
         });
+
       }, 250);
 
-      const response = await fetch("http://127.0.0.1:5000/predict", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: text.trim(),
-          source_url: sourceUrl.trim(),
-        }),
-      });
 
-      clearInterval(progressTimer);
+      // ------------------------------
+      // SEND REQUEST TO FLASK
+      // ------------------------------
 
-      if (!response.ok) {
-        throw new Error("Server could not process the request.");
+      const response = await fetch(
+        `${API_URL}/predict`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+
+            text: text.trim(),
+
+            source_url: sourceUrl.trim(),
+
+          }),
+        }
+      );
+
+
+      // Stop progress animation
+
+      if (progressTimer) {
+        clearInterval(progressTimer);
       }
 
-      const data = await response.json();
+
+      // ------------------------------
+      // READ SERVER RESPONSE
+      // ------------------------------
+
+      let data;
+
+
+      try {
+
+        data = await response.json();
+
+      } catch {
+
+        throw new Error(
+          "The TruthLens server returned an invalid response."
+        );
+
+      }
+
+
+      // ------------------------------
+      // SERVER ERROR
+      // ------------------------------
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.error ||
+          data.message ||
+          "Server could not process the request."
+        );
+
+      }
+
+
+      // ------------------------------
+      // SUCCESS
+      // ------------------------------
 
       setProgress(100);
 
+
       setTimeout(() => {
+
         onResult(data);
+
         setLoading(false);
+
         setProgress(0);
+
       }, 500);
 
+
     } catch (err) {
+
+      // Stop progress animation
+
+      if (progressTimer) {
+        clearInterval(progressTimer);
+      }
+
+
+      console.error(
+        "TruthLens API Error:",
+        err
+      );
+
+
       setLoading(false);
+
       setProgress(0);
 
-      setError(
-        err.message ||
-        "Unable to connect to the TruthLens AI server."
-      );
+
+      // ------------------------------
+      // ERROR MESSAGE
+      // ------------------------------
+
+      if (
+        err instanceof TypeError &&
+        err.message.toLowerCase().includes("fetch")
+      ) {
+
+        setError(
+          "Unable to connect to the TruthLens AI server. Please check that the backend is online."
+        );
+
+      } else {
+
+        setError(
+          err.message ||
+          "Unable to connect to the TruthLens AI server."
+        );
+
+      }
+
     }
+
   };
 
+
+  // ==========================================
+  // COMPONENT UI
+  // ==========================================
+
   return (
+
     <div className="news-form-container">
 
       <form
@@ -91,14 +240,20 @@ function NewsForm({ onResult }) {
         onSubmit={handleSubmit}
       >
 
-        {/* HEADER */}
+
+        {/* ==================================
+            HEADER
+        ================================== */}
+
         <div className="form-card-header">
 
           <div className="form-icon">
             ◉
           </div>
 
+
           <div>
+
             <span className="form-label">
               TRUTHLENS AI
             </span>
@@ -106,24 +261,39 @@ function NewsForm({ onResult }) {
             <h2>
               Submit Information
             </h2>
+
           </div>
 
+
           <div className="secure-badge">
+
             <span></span>
+
             SECURE ANALYSIS
+
           </div>
 
         </div>
 
 
-        {/* DESCRIPTION */}
+
+        {/* ==================================
+            DESCRIPTION
+        ================================== */}
+
         <p className="form-description">
+
           Paste a news article, headline, social media post,
           or any information you want TruthLens AI to examine.
+
         </p>
 
 
-        {/* NEWS TEXT */}
+
+        {/* ==================================
+            NEWS TEXT
+        ================================== */}
+
         <div className="input-section">
 
           <div className="input-label-row">
@@ -138,25 +308,45 @@ function NewsForm({ onResult }) {
 
           </div>
 
+
           <div className="textarea-wrapper">
 
             <div className="textarea-topbar">
-              <span>CONTENT INPUT</span>
-              <span>AI READY</span>
+
+              <span>
+                CONTENT INPUT
+              </span>
+
+              <span>
+                AI READY
+              </span>
+
             </div>
 
+
             <textarea
+
               value={text}
+
               onChange={(e) => {
+
                 setText(e.target.value);
+
                 setError("");
+
               }}
+
               placeholder="Paste a news article, headline or social media post..."
+
               disabled={loading}
+
             />
 
+
             {loading && (
+
               <div className="textarea-scan"></div>
+
             )}
 
           </div>
@@ -164,26 +354,46 @@ function NewsForm({ onResult }) {
         </div>
 
 
-        {/* EXAMPLES */}
+
+        {/* ==================================
+            EXAMPLES
+        ================================== */}
+
         <div className="examples">
 
-          <span>TRY AN EXAMPLE:</span>
+          <span>
+            TRY AN EXAMPLE:
+          </span>
+
 
           {examples.map((example, index) => (
+
             <button
+
               type="button"
+
               key={index}
+
               onClick={() => fillExample(example)}
+
               disabled={loading}
+
             >
+
               Example {index + 1}
+
             </button>
+
           ))}
 
         </div>
 
 
-        {/* SOURCE URL */}
+
+        {/* ==================================
+            SOURCE URL
+        ================================== */}
+
         <div className="source-section">
 
           <div className="input-label-row">
@@ -198,58 +408,101 @@ function NewsForm({ onResult }) {
 
           </div>
 
+
           <input
+
             type="url"
+
             value={sourceUrl}
-            onChange={(e) => setSourceUrl(e.target.value)}
+
+            onChange={(e) => {
+
+              setSourceUrl(e.target.value);
+
+              setError("");
+
+            }}
+
             placeholder="https://example.com/article"
+
             disabled={loading}
+
           />
 
+
           <p className="source-help">
+
             Add the original article or information source
             to let TruthLens verify the domain.
+
           </p>
 
         </div>
 
 
-        {/* ERROR */}
+
+        {/* ==================================
+            ERROR
+        ================================== */}
+
         {error && (
+
           <div className="form-error">
 
-            <span>!</span>
+            <span>
+              !
+            </span>
 
             <p>
               {error}
             </p>
 
           </div>
+
         )}
 
 
-        {/* VERIFY BUTTON */}
+
+        {/* ==================================
+            VERIFY BUTTON
+        ================================== */}
+
         {!loading && (
+
           <button
+
             type="submit"
+
             className="verify-button"
+
           >
+
             <span className="button-icon">
               ✦
             </span>
 
+
             VERIFY INFORMATION
+
 
             <span className="button-arrow">
               →
             </span>
+
           </button>
+
         )}
 
 
-        {/* ANALYSIS PANEL */}
+
+        {/* ==================================
+            ANALYSIS PANEL
+        ================================== */}
+
         {loading && (
+
           <div className="analysis-panel">
+
 
             <div className="analysis-orb">
 
@@ -264,105 +517,202 @@ function NewsForm({ onResult }) {
             </div>
 
 
+
             <div className="analysis-info">
 
+
               <div className="analysis-title">
+
                 TruthLens AI is analyzing...
+
               </div>
+
 
               <div className="analysis-subtitle">
+
                 Processing information through the AI
                 classification engine.
+
               </div>
 
+
+
+              {/* PROGRESS BAR */}
 
               <div className="progress-track">
 
                 <div
+
                   className="progress-bar"
+
                   style={{
                     width: `${progress}%`,
                   }}
+
                 ></div>
 
               </div>
 
 
+
+              {/* ANALYSIS STEPS */}
+
               <div className="analysis-steps">
 
+
                 <div
+
                   className={`step ${
-                    progress >= 20 ? "active" : ""
+                    progress >= 20
+                      ? "active"
+                      : ""
                   }`}
+
                 >
-                  <span>✓</span>
+
+                  <span>
+                    ✓
+                  </span>
+
                   INPUT
+
                 </div>
 
+
+
                 <div
+
                   className={`step ${
-                    progress >= 40 ? "active" : ""
+                    progress >= 40
+                      ? "active"
+                      : ""
                   }`}
+
                 >
-                  <span>✓</span>
+
+                  <span>
+                    ✓
+                  </span>
+
                   ANALYZING
+
                 </div>
 
+
+
                 <div
+
                   className={`step ${
-                    progress >= 70 ? "active" : ""
+                    progress >= 70
+                      ? "active"
+                      : ""
                   }`}
+
                 >
-                  <span>✓</span>
+
+                  <span>
+                    ✓
+                  </span>
+
                   CLASSIFYING
+
                 </div>
 
+
+
                 <div
+
                   className={`step ${
-                    progress >= 100 ? "active" : ""
+                    progress >= 100
+                      ? "active"
+                      : ""
                   }`}
+
                 >
-                  <span>✓</span>
+
+                  <span>
+                    ✓
+                  </span>
+
                   COMPLETE
+
                 </div>
+
 
               </div>
 
             </div>
 
           </div>
+
         )}
 
 
-        {/* TRUST STRIP */}
+
+        {/* ==================================
+            TRUST STRIP
+        ================================== */}
+
         <div className="form-trust-strip">
 
+
           <div>
-            <span>◉</span>
+
+            <span>
+              ◉
+            </span>
+
             AI ANALYSIS
+
           </div>
 
+
+
           <div>
-            <span>◇</span>
+
+            <span>
+              ◇
+            </span>
+
             MODEL BASED
+
           </div>
 
+
+
           <div>
-            <span>⚡</span>
+
+            <span>
+              ⚡
+            </span>
+
             FAST PROCESSING
+
           </div>
 
+
+
           <div>
-            <span>✓</span>
+
+            <span>
+              ✓
+            </span>
+
             PRIVACY AWARE
+
           </div>
+
 
         </div>
+
 
       </form>
 
     </div>
+
   );
+
 }
+
 
 export default NewsForm;

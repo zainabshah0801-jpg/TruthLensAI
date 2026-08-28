@@ -1,23 +1,9 @@
-import os
-from transformers import pipeline
+# ==========================================
+# TRUTHLENS AI — LIGHTWEIGHT NEWS ANALYZER
+# ==========================================
 
+import re
 
-# =========================================
-# TRUTHLENS AI — FAKE NEWS CLASSIFIER
-# =========================================
-
-HF_TOKEN = os.getenv("HF_TOKEN")
-
-classifier = pipeline(
-    "text-classification",
-    model="hamzab/roberta-fake-news-classification",
-    token=HF_TOKEN
-)
-
-
-# =========================================
-# PREDICT NEWS
-# =========================================
 
 def predict_news(text):
 
@@ -37,55 +23,137 @@ def predict_news(text):
 
 
     # -----------------------------------------
-    # CLEAN INPUT
+    # CLEAN TEXT
     # -----------------------------------------
 
     text = text.strip()[:2000]
 
+    lower_text = text.lower()
+
 
     # -----------------------------------------
-    # AI MODEL PREDICTION
+    # SUSPICIOUS PATTERN DETECTION
     # -----------------------------------------
 
-    try:
+    suspicious_words = [
+        "shocking",
+        "miracle",
+        "secret",
+        "100% guaranteed",
+        "you won't believe",
+        "click here",
+        "urgent",
+        "breaking",
+        "cure",
+        "instant cure",
+        "doctors hate",
+        "share immediately",
+        "government hiding",
+        "fake",
+        "conspiracy"
+    ]
 
-        result = classifier(text)[0]
 
-        raw_label = result["label"]
+    suspicious_count = 0
 
-        confidence = round(
-            result["score"] * 100,
-            2
+    for word in suspicious_words:
+
+        if word in lower_text:
+            suspicious_count += 1
+
+
+    # -----------------------------------------
+    # EXCESSIVE CAPITALIZATION
+    # -----------------------------------------
+
+    uppercase_count = sum(
+        1 for char in text if char.isupper()
+    )
+
+    letter_count = sum(
+        1 for char in text if char.isalpha()
+    )
+
+
+    uppercase_ratio = 0
+
+    if letter_count > 0:
+
+        uppercase_ratio = (
+            uppercase_count / letter_count
         )
 
-    except Exception as e:
 
-        return {
-            "score": 0,
-            "label": "Analysis Unavailable",
-            "message": "The AI model could not be reached.",
-            "model_label": "ERROR",
-            "confidence_level": "NONE",
-            "analysis_status": "FAILED",
-            "error": str(e)
-        }
+    # -----------------------------------------
+    # EXCLAMATION MARKS
+    # -----------------------------------------
+
+    exclamation_count = text.count("!")
 
 
     # -----------------------------------------
-    # CONVERT MODEL OUTPUT
+    # CALCULATE RISK SCORE
     # -----------------------------------------
 
-    if raw_label.upper() in [
-        "REAL",
-        "TRUE",
-        "LABEL_1"
-    ]:
+    risk_score = 0
 
-        label = "Likely Genuine"
+
+    risk_score += suspicious_count * 12
+
+
+    if uppercase_ratio > 0.35:
+        risk_score += 15
+
+
+    if exclamation_count >= 3:
+        risk_score += 10
+
+
+    risk_score = min(
+        risk_score,
+        95
+    )
+
+
+    # -----------------------------------------
+    # CLASSIFICATION
+    # -----------------------------------------
+
+    if risk_score >= 45:
+
+        label = "Potentially Fake"
+
+        confidence = min(
+            60 + risk_score / 2,
+            95
+        )
+
+        message = (
+            "The information contains patterns "
+            "that may be associated with unreliable "
+            "or misleading content. Further verification "
+            "from trusted sources is recommended."
+        )
+
+        model_label = "SUSPICIOUS"
+
 
     else:
 
-        label = "Potentially Fake"
+        label = "Likely Genuine"
+
+        confidence = max(
+            60,
+            90 - risk_score
+        )
+
+        message = (
+            "The information does not show many "
+            "of the suspicious linguistic patterns "
+            "checked by the TruthLens analysis engine."
+        )
+
+        model_label = "LOW_RISK"
 
 
     # -----------------------------------------
@@ -106,38 +174,21 @@ def predict_news(text):
 
 
     # -----------------------------------------
-    # ANALYSIS MESSAGE
-    # -----------------------------------------
-
-    if label == "Likely Genuine":
-
-        message = (
-            "The AI model detected patterns "
-            "more consistent with genuine information."
-        )
-
-    else:
-
-        message = (
-            "The AI model detected patterns "
-            "that may be associated with unreliable "
-            "or misleading information."
-        )
-
-
-    # -----------------------------------------
-    # RETURN STRUCTURED RESULT
+    # RETURN RESULT
     # -----------------------------------------
 
     return {
 
-        "score": confidence,
+        "score": round(
+            confidence,
+            2
+        ),
 
         "label": label,
 
         "message": message,
 
-        "model_label": raw_label,
+        "model_label": model_label,
 
         "confidence_level": confidence_level,
 
