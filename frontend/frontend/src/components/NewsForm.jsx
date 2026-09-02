@@ -1,16 +1,20 @@
 import { useState } from "react";
 import "./NewsForm.css";
 
-// Backend URL
-// For local testing it uses Flask on port 5000.
-// For Vercel deployment, VITE_API_URL will come from your .env file.
+// ==========================================
+// BACKEND URL
+// ==========================================
+// Uses VITE_API_URL if you have configured it.
+// Otherwise, it uses your deployed Render backend.
+//
+// This means the Vercel website can communicate
+// with your deployed Flask backend.
 const API_URL =
   import.meta.env.VITE_API_URL ||
-  "http://127.0.0.1:5000";
+  "https://truthlens-ai-backend-3j5i.onrender.com";
 
 
 function NewsForm({ onResult }) {
-
   const [text, setText] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -34,10 +38,8 @@ function NewsForm({ onResult }) {
   // ==========================================
 
   const fillExample = (example) => {
-
     setText(example);
     setError("");
-
   };
 
 
@@ -46,7 +48,6 @@ function NewsForm({ onResult }) {
   // ==========================================
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
 
@@ -55,11 +56,9 @@ function NewsForm({ onResult }) {
     // ------------------------------
 
     if (!text.trim()) {
-
       setError(
         "Please enter some news or information to analyze."
       );
-
       return;
     }
 
@@ -70,6 +69,7 @@ function NewsForm({ onResult }) {
 
 
     let progressTimer;
+    let timeoutTimer;
 
 
     try {
@@ -79,21 +79,29 @@ function NewsForm({ onResult }) {
       // ------------------------------
 
       progressTimer = setInterval(() => {
-
         setProgress((previous) => {
 
           if (previous >= 90) {
-
             clearInterval(progressTimer);
-
             return 90;
           }
 
           return previous + 10;
-
         });
-
       }, 250);
+
+
+      // ------------------------------
+      // REQUEST TIMEOUT
+      // ------------------------------
+      // Render may take some time to wake
+      // if the backend has been idle.
+
+      const controller = new AbortController();
+
+      timeoutTimer = setTimeout(() => {
+        controller.abort();
+      }, 60000);
 
 
       // ------------------------------
@@ -107,24 +115,25 @@ function NewsForm({ onResult }) {
 
           headers: {
             "Content-Type": "application/json",
+            "Accept": "application/json",
           },
 
           body: JSON.stringify({
-
             text: text.trim(),
-
             source_url: sourceUrl.trim(),
-
           }),
+
+          signal: controller.signal,
         }
       );
 
 
-      // Stop progress animation
+      // ------------------------------
+      // STOP TIMERS
+      // ------------------------------
 
-      if (progressTimer) {
-        clearInterval(progressTimer);
-      }
+      clearInterval(progressTimer);
+      clearTimeout(timeoutTimer);
 
 
       // ------------------------------
@@ -133,17 +142,12 @@ function NewsForm({ onResult }) {
 
       let data;
 
-
       try {
-
         data = await response.json();
-
       } catch {
-
         throw new Error(
           "The TruthLens server returned an invalid response."
         );
-
       }
 
 
@@ -152,13 +156,11 @@ function NewsForm({ onResult }) {
       // ------------------------------
 
       if (!response.ok) {
-
         throw new Error(
           data.error ||
           data.message ||
-          "Server could not process the request."
+          `Server error: ${response.status}`
         );
-
       }
 
 
@@ -182,10 +184,16 @@ function NewsForm({ onResult }) {
 
     } catch (err) {
 
-      // Stop progress animation
+      // ------------------------------
+      // STOP TIMERS
+      // ------------------------------
 
       if (progressTimer) {
         clearInterval(progressTimer);
+      }
+
+      if (timeoutTimer) {
+        clearTimeout(timeoutTimer);
       }
 
 
@@ -196,15 +204,20 @@ function NewsForm({ onResult }) {
 
 
       setLoading(false);
-
       setProgress(0);
 
 
       // ------------------------------
-      // ERROR MESSAGE
+      // CONNECTION ERROR
       // ------------------------------
 
-      if (
+      if (err.name === "AbortError") {
+
+        setError(
+          "The TruthLens AI server took too long to respond. Please try again."
+        );
+
+      } else if (
         err instanceof TypeError &&
         err.message.toLowerCase().includes("fetch")
       ) {
@@ -219,11 +232,9 @@ function NewsForm({ onResult }) {
           err.message ||
           "Unable to connect to the TruthLens AI server."
         );
-
       }
 
     }
-
   };
 
 
